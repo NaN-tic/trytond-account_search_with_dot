@@ -1,5 +1,6 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+#This file is part account_search_with_dot module for Tryton.
+#The COPYRIGHT file at the top level of this repository contains 
+#the full copyright notices and license terms.
 {
     'name': 'Search Account With Dot',
     'version': '2.3.0',
