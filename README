@@ -1,6 +1,8 @@
 account_search_with_dot
 =======================
 
+The account_search_with_dot module of the Tryton application platform.
+
 Installing
 ----------
 
@@ -9,9 +11,13 @@ See INSTALL
 Support
 -------
 
-If you encounter any problems please use bitbucket bugtracker:
+For more information or if you encounter any problems with this module,
+please contact the programmers at
 
-  https://bitbucket.org/albertnan/account_search_with_dot/issues
+  Nan-Tic
+  --------------
+  website: http://www.nan-tic.com/
+  email: info@nan-tic.com
 
 If you encounter any problems with Tryton, please don't hesitate to ask
 questions on the Tryton bug tracker, mailing list, wiki or IRC channel:
@@ -20,11 +26,6 @@ questions on the Tryton bug tracker, mailing list, wiki or IRC channel:
   http://groups.tryton.org/
   http://wiki.tryton.org/
   irc://irc.freenode.net/tryton
-
-Documentation
--------------
-
-See the doc/ directory.
 
 License
 -------
@@ -36,3 +37,7 @@ Copyright
 
 See COPYRIGHT
 
+
+For more information please visit the Tryton web site:
+
+  http://www.tryton.org/

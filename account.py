@@ -1,15 +1,20 @@
 #This file is part account_search_with_dot module for Tryton.
 #The COPYRIGHT file at the top level of this repository contains 
 #the full copyright notices and license terms.
-from trytond.model import ModelView, ModelSQL
-from trytond.transaction import Transaction
 import re
+from trytond.transaction import Transaction
+from trytond.pool import PoolMeta
 from trytond.config import CONFIG
 
-class Account(ModelSQL, ModelView):
-    _name = 'account.account'
+__all__ = ['Account']
+__metaclass__ = PoolMeta
 
-    def search(self, args, offset=0, limit=None, order=None, count=False, 
+class Account:
+    'Account'
+    __name__ = 'account.account'
+
+    @classmethod
+    def search(cls, args, offset=0, limit=None, order=None, count=False,
             query_string=False):
         """Improves the search of accounts using a dot to 
         fill the zeroes (like 43.27 to search account 
@@ -32,14 +37,14 @@ class Account(ModelSQL, ModelView):
                     else:
                         regexp = None
                     if regexp:
-                        cursor.execute("SELECT id FROM " + self._table + 
+                        cursor.execute("SELECT id FROM " + cls._table + 
                             " WHERE kind <> 'view' AND "
                             "code " + regexp + 
                             " ('^' || %s || '0+' || %s || '$')",
                             (query[0], query[2]))
                         ids = [x[0] for x in cursor.fetchall()]
                     else:
-                        cursor.execute("SELECT id, code FROM " + self._table + 
+                        cursor.execute("SELECT id, code FROM " + cls._table + 
                             " WHERE kind <> 'view' AND "
                             "code LIKE %s", (query[0] + '%' + query[2],))
                         pattern = '^%s0+%s$' % (query[0], query[2])
@@ -53,6 +58,5 @@ class Account(ModelSQL, ModelView):
                         else:
                             args[pos] = ('id', 'in', ids)
             pos += 1
-        return super(Account, self).search(args, offset=offset, limit=limit,
+        return super(Account, cls).search(args, offset=offset, limit=limit,
                 order=order, count=count, query_string=query_string)
-Account()
