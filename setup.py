@@ -33,14 +33,14 @@ setup(name='trytonzz_account_search_with_dot',
     author='NaN·tic',
     author_email='info@NaN-tic.com',
     url='http://www.nan-tic.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytonzz-account_search_with_dot",
-    package_dir={'trytonzz.modules.account_search_with_dot': '.'},
+    download_url="https://bitbucket.org/zikzakmedia/trytond-account_search_with_dot",
+    package_dir={'trytond.modules.account_search_with_dot': '.'},
     packages=[
-        'trytonzz.modules.account_search_with_dot',
-        'trytonzz.modules.account_search_with_dot.tests',
+        'trytond.modules.account_search_with_dot',
+        'trytond.modules.account_search_with_dot.tests',
     ],
     package_data={
-        'trytonzz.modules.account_search_with_dot': info.get('xml', []) \
+        'trytond.modules.account_search_with_dot': info.get('xml', []) \
             + ['tryton.cfg', 'locale/*.po'],
     },
     classifiers=[
@@ -63,9 +63,9 @@ setup(name='trytonzz_account_search_with_dot',
     install_requires=requires,
     zip_safe=False,
     entry_points="""
-    [trytonzz.modules]
-    account_search_with_dot = trytonzz.modules.account_search_with_dot
+    [trytond.modules]
+    account_search_with_dot = trytond.modules.account_search_with_dot
     """,
     test_suite='tests',
-    test_loader='trytonzz.test_loader:Loader',
+    test_loader='trytond.test_loader:Loader',
 )
