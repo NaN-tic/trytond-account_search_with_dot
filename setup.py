@@ -27,13 +27,13 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='trytonzz_account_search_with_dot',
+setup(name='nantic_account_search_with_dot',
     version=info.get('version', '0.0.1'),
     description='Account Search With Dot',
     author='NaN·tic',
     author_email='info@NaN-tic.com',
     url='http://www.nan-tic.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-account_search_with_dot",
+    download_url="https://bitbucket.org/trytonspain/trytond-account_search_with_dot",
     package_dir={'trytond.modules.account_search_with_dot': '.'},
     packages=[
         'trytond.modules.account_search_with_dot',
