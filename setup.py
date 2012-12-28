@@ -27,7 +27,7 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='nantic_account_search_with_dot',
+setup(name='trytonspain_account_search_with_dot',
     version=info.get('version', '0.0.1'),
     description='Account Search With Dot',
     author='NaN·tic',
