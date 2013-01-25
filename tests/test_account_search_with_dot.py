@@ -9,12 +9,10 @@ if os.path.isdir(DIR):
     sys.path.insert(0, os.path.dirname(DIR))
 
 import unittest
-import datetime
 import trytond.tests.test_tryton
 from trytond.tests.test_tryton import test_view, test_depends
 from trytond.tests.test_tryton import POOL, DB_NAME, USER, CONTEXT
 from trytond.transaction import Transaction
-from trytond.wizard import Session
 
 
 class AccountSearchWithDotTestCase(unittest.TestCase):
@@ -44,32 +42,32 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
 
     def test0010account_chart(self):
         'Test creation of minimal chart of accounts'
-        with Transaction().start(DB_NAME, USER,
-                context=CONTEXT) as transaction:
-            company_id, = self.company.search([('name', '=', 'B2CK')])
-            self.user.write(USER, {
-                    'main_company': company_id,
-                    'company': company_id,
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
+            company, = self.company.search([('name', '=', 'B2CK')])
+            user = self.user.search([('id', '=', USER)])
+            self.user.write(user, {
+                    'main_company': company,
+                    'company': company,
                     })
-            type_id = self.type.create({
+            type_id = self.type.create([{
                     'name': 'Type',
-                    'company': company_id,
-                    })
+                    'company': company,
+                    }])[0]
 
-            first_id = self.account.create({
+            first_id = self.account.create([{
                     'code': '1000000',
                     'name': 'One',
                     'kind': 'payable',
-                    'company': company_id,
+                    'company': company,
                     'type': type_id,
-                    })
-            second_id = self.account.create({
+                    }])[0]
+            second_id = self.account.create([{
                     'code': '1000001',
                     'name': 'Two',
                     'kind': 'payable',
-                    'company': company_id,
+                    'company': company,
                     'type': type_id,
-                    })
+                    }])[0]
             result = self.account.search([('code','like','1.')])
             self.assertEqual(result, [first_id])
             result = self.account.search([('code','ilike','1.')])
