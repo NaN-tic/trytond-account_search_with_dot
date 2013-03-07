@@ -5,8 +5,8 @@ Búsqueda de cuentas contables mediante el punto
 Permite buscar cuentas contables mediante el punto. Por ejemplo si introduce
 **43.27** buscará la cuenta **43000027**.
 
-Módulos que dependen
-====================
+Módulos de los que depende
+==========================
 
 Instalados
 ----------
