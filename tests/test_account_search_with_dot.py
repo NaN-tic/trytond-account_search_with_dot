@@ -17,14 +17,16 @@ from trytond.transaction import Transaction
 
 class AccountSearchWithDotTestCase(unittest.TestCase):
     '''
-    Test Account module.
+    Test Account Search With Dot module.
     '''
 
     def setUp(self):
-        trytond.tests.test_tryton.install_module('account_search_with_dot')
+        trytond.tests.test_tryton.install_module(
+            'account_statement_of_account')
         self.account_template = POOL.get('account.account.template')
         self.account = POOL.get('account.account')
-        self.type = POOL.get('account.account.type')
+        self.account_create_chart = POOL.get(
+            'account.create_chart', type='wizard')
         self.company = POOL.get('company.company')
         self.user = POOL.get('res.user')
 
@@ -32,7 +34,7 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
         '''
         Test views.
         '''
-        test_view('account')
+        test_view('account_statement_of_account')
 
     def test0006depends(self):
         '''
@@ -47,7 +49,8 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
             account_template, = self.account_template.search([
                     ('parent', '=', None),
                     ])
-            company, = self.company.search([('name', '=', 'B2CK')])
+
+            company, = self.company.search([('rec_name', '=', 'B2CK')])
             self.user.write([self.user(USER)], {
                     'main_company': company.id,
                     'company': company.id,
