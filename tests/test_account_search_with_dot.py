@@ -42,48 +42,36 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
 
     def test0010account_chart(self):
         'Test creation of minimal chart of accounts'
-        with Transaction().start(DB_NAME, USER, context=CONTEXT):
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
+            account_template, = self.account_template.search([
+                    ('parent', '=', None),
+                    ])
             company, = self.company.search([('name', '=', 'B2CK')])
-            user = self.user.search([('id', '=', USER)])
-            self.user.write(user, {
-                    'main_company': company,
-                    'company': company,
+            self.user.write([self.user(USER)], {
+                    'main_company': company.id,
+                    'company': company.id,
                     })
-            type_id = self.type.create([{
-                    'name': 'Type',
-                    'company': company,
-                    }])[0]
+            CONTEXT.update(self.user.get_preferences(context_only=True))
 
-            first_id = self.account.create([{
-                    'code': '1000000',
-                    'name': 'One',
-                    'kind': 'payable',
-                    'company': company,
-                    'type': type_id,
-                    }])[0]
-            second_id = self.account.create([{
-                    'code': '1000001',
-                    'name': 'Two',
-                    'kind': 'payable',
-                    'company': company,
-                    'type': type_id,
-                    }])[0]
-            result = self.account.search([('code','like','1.')])
-            self.assertEqual(result, [first_id])
-            result = self.account.search([('code','ilike','1.')])
-            self.assertEqual(result, [first_id])
-            result = self.account.search([('code','not like','1.')])
-            self.assertEqual(result, [second_id])
-            result = self.account.search([('code','not ilike','1.')])
-            self.assertEqual(result, [second_id])
-            result = self.account.search([('code','like','1.1')])
-            self.assertEqual(result, [second_id])
-            result = self.account.search([('code','ilike','1.1')])
-            self.assertEqual(result, [second_id])
-            result = self.account.search([('code','not like','1.1')])
-            self.assertEqual(result, [first_id])
-            result = self.account.search([('code','not ilike','1.1')])
-            self.assertEqual(result, [first_id])
+            session_id, _, _ = self.account_create_chart.create()
+            create_chart = self.account_create_chart(session_id)
+            create_chart.account.account_template = account_template
+            create_chart.account.company = company
+            create_chart.transition_create_account()
+            receivable, = self.account.search([
+                    ('kind', '=', 'receivable'),
+                    ('company', '=', company.id),
+                    ])
+            payable, = self.account.search([
+                    ('kind', '=', 'payable'),
+                    ('company', '=', company.id),
+                    ])
+            create_chart.properties.company = company
+            create_chart.properties.account_receivable = receivable
+            create_chart.properties.account_payable = payable
+            create_chart.transition_create_properties()
+            transaction.cursor.commit()
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
