@@ -21,14 +21,7 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
     '''
 
     def setUp(self):
-        trytond.tests.test_tryton.install_module(
-            'account_statement_of_account')
-        self.account_template = POOL.get('account.account.template')
-        self.account = POOL.get('account.account')
-        self.account_create_chart = POOL.get(
-            'account.create_chart', type='wizard')
-        self.company = POOL.get('company.company')
-        self.user = POOL.get('res.user')
+        trytond.tests.test_tryton.install_module('account_statement_of_account')
 
     def test0005views(self):
         '''
@@ -42,44 +35,14 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
         '''
         test_depends()
 
-    def test0010account_chart(self):
-        'Test creation of minimal chart of accounts'
-        with Transaction().start(DB_NAME, USER,
-                context=CONTEXT) as transaction:
-            account_template, = self.account_template.search([
-                    ('parent', '=', None),
-                    ])
-
-            company, = self.company.search([('rec_name', '=', 'B2CK')])
-            self.user.write([self.user(USER)], {
-                    'main_company': company.id,
-                    'company': company.id,
-                    })
-            CONTEXT.update(self.user.get_preferences(context_only=True))
-
-            session_id, _, _ = self.account_create_chart.create()
-            create_chart = self.account_create_chart(session_id)
-            create_chart.account.account_template = account_template
-            create_chart.account.company = company
-            create_chart.transition_create_account()
-            receivable, = self.account.search([
-                    ('kind', '=', 'receivable'),
-                    ('company', '=', company.id),
-                    ])
-            payable, = self.account.search([
-                    ('kind', '=', 'payable'),
-                    ('company', '=', company.id),
-                    ])
-            create_chart.properties.company = company
-            create_chart.properties.account_receivable = receivable
-            create_chart.properties.account_payable = payable
-            create_chart.transition_create_properties()
-            transaction.cursor.commit()
-
 def suite():
     suite = trytond.tests.test_tryton.suite()
     from trytond.modules.company.tests import test_company
     for test in test_company.suite():
+        if test not in suite:
+            suite.addTest(test)
+    from trytond.modules.account.tests import test_account
+    for test in test_account.suite():
         if test not in suite:
             suite.addTest(test)
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
