@@ -35,6 +35,7 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
         '''
         test_depends()
 
+
 def suite():
     suite = trytond.tests.test_tryton.suite()
     from trytond.modules.company.tests import test_company
