@@ -15,7 +15,7 @@ class Account:
 
     @classmethod
     def search(cls, args, offset=0, limit=None, order=None, count=False,
-            query_string=False):
+            query=False):
         """Improves the search of accounts using a dot to 
         fill the zeroes (like 43.27 to search account 
         43000027)
@@ -59,4 +59,4 @@ class Account:
                             args[pos] = ('id', 'in', ids)
             pos += 1
         return super(Account, cls).search(args, offset=offset, limit=limit,
-                order=order, count=count, query_string=query_string)
+                order=order, count=count, query=query)
