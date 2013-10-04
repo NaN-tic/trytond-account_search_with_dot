@@ -11,8 +11,6 @@ if os.path.isdir(DIR):
 import unittest
 import trytond.tests.test_tryton
 from trytond.tests.test_tryton import test_view, test_depends
-from trytond.tests.test_tryton import POOL, DB_NAME, USER, CONTEXT
-from trytond.transaction import Transaction
 
 
 class AccountSearchWithDotTestCase(unittest.TestCase):
@@ -21,13 +19,13 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
     '''
 
     def setUp(self):
-        trytond.tests.test_tryton.install_module('account_statement_of_account')
+        trytond.tests.test_tryton.install_module('account_search_with_dot')
 
     def test0005views(self):
         '''
         Test views.
         '''
-        test_view('account_statement_of_account')
+        test_view('account_search_with_dot')
 
     def test0006depends(self):
         '''
@@ -38,14 +36,6 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
-    from trytond.modules.company.tests import test_company
-    for test in test_company.suite():
-        if test not in suite:
-            suite.addTest(test)
-    from trytond.modules.account.tests import test_account
-    for test in test_account.suite():
-        if test not in suite:
-            suite.addTest(test)
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
         AccountSearchWithDotTestCase))
     return suite
