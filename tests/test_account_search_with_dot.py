@@ -10,7 +10,7 @@ if os.path.isdir(DIR):
 
 import unittest
 import trytond.tests.test_tryton
-from trytond.tests.test_tryton import test_view, test_depends
+from trytond.tests.test_tryton import test_depends
 
 
 class AccountSearchWithDotTestCase(unittest.TestCase):
@@ -20,12 +20,6 @@ class AccountSearchWithDotTestCase(unittest.TestCase):
 
     def setUp(self):
         trytond.tests.test_tryton.install_module('account_search_with_dot')
-
-    def test0005views(self):
-        '''
-        Test views.
-        '''
-        test_view('account_search_with_dot')
 
     def test0006depends(self):
         '''
