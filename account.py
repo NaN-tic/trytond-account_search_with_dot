@@ -16,20 +16,23 @@ class Account:
     @classmethod
     def search(cls, args, offset=0, limit=None, order=None, count=False,
             query=False):
-        """Improves the search of accounts using a dot to 
-        fill the zeroes (like 43.27 to search account 
+        """Improves the search of accounts using a dot to
+        fill the zeroes (like 43.27 to search account
         43000027)
         """
         args = args[:]
         pos = 0
         while pos < len(args):
-            if (args[pos][0] in ('code', 'rec_name') 
-                    and args[pos][1] in ('like', 'ilike', 
+            if not args[pos]:
+                pos += 1
+                continue
+            if (args[pos][0] in ('code', 'rec_name')
+                    and args[pos][1] in ('like', 'ilike',
                     'not like', 'not ilike') and args[pos][2]):
                 cursor = Transaction().cursor
-                query = args[pos][2].replace('%','')
-                if '.' in query:
-                    query = query.partition('.')
+                q = args[pos][2].replace('%','')
+                if '.' in q:
+                    q = q.partition('.')
                     if CONFIG['db_type'] == 'postgresql':
                         regexp = '~'
                     elif CONFIG['db_type'] == 'mysql':
@@ -37,17 +40,17 @@ class Account:
                     else:
                         regexp = None
                     if regexp:
-                        cursor.execute("SELECT id FROM " + cls._table + 
+                        cursor.execute("SELECT id FROM " + cls._table +
                             " WHERE kind <> 'view' AND "
                             "code " + regexp + 
                             " ('^' || %s || '0+' || %s || '$')",
-                            (query[0], query[2]))
+                            (q[0], q[2]))
                         ids = [x[0] for x in cursor.fetchall()]
                     else:
-                        cursor.execute("SELECT id, code FROM " + cls._table + 
+                        cursor.execute("SELECT id, code FROM " + cls._table +
                             " WHERE kind <> 'view' AND "
-                            "code LIKE %s", (query[0] + '%' + query[2],))
-                        pattern = '^%s0+%s$' % (query[0], query[2])
+                            "code LIKE %s", (q[0] + '%' + q[2],))
+                        pattern = '^%s0+%s$' % (q[0], q[2])
                         ids = []
                         for record in cursor.fetchall():
                             if re.search(pattern, record[1]):
