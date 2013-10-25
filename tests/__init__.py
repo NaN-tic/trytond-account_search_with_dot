@@ -3,3 +3,5 @@
 #the full copyright notices and license terms.
 
 from .test_account_search_with_dot import suite
+
+__all__ = ['suite']
