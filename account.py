@@ -1,13 +1,14 @@
-#This file is part account_search_with_dot module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains 
-#the full copyright notices and license terms.
+# This file is part account_search_with_dot module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 import re
 from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
-from trytond.config import CONFIG
+from trytond.config import config
 
 __all__ = ['Account']
 __metaclass__ = PoolMeta
+
 
 class Account:
     'Account'
@@ -30,19 +31,20 @@ class Account:
                     and args[pos][1] in ('like', 'ilike',
                     'not like', 'not ilike') and args[pos][2]):
                 cursor = Transaction().cursor
-                q = args[pos][2].replace('%','')
+                q = args[pos][2].replace('%', '')
                 if '.' in q:
                     q = q.partition('.')
-                    if CONFIG['db_type'] == 'postgresql':
+                    db_type = config.get('database', 'uri').split(':')[0]
+                    if db_type == 'postgresql':
                         regexp = '~'
-                    elif CONFIG['db_type'] == 'mysql':
+                    elif db_type == 'mysql':
                         regexp = 'REGEXP'
                     else:
                         regexp = None
                     if regexp:
                         cursor.execute("SELECT id FROM " + cls._table +
                             " WHERE kind <> 'view' AND "
-                            "code " + regexp + 
+                            "code " + regexp +
                             " ('^' || %s || '0+' || %s || '$')",
                             (q[0], q[2]))
                         ids = [x[0] for x in cursor.fetchall()]
