@@ -61,7 +61,7 @@ class Account:
                                 (table.kind != 'view') &
                                 regexp(table.code, expression)))
                     else:
-                        cursor = Transaction().cursor
+                        cursor = Transaction().connection.cursor()
                         cursor.execute(*table.select(table.id,
                                 table.code, where=(
                                     (table.kind != 'view') &
