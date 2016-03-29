@@ -8,7 +8,6 @@ from trytond.pool import PoolMeta
 from trytond.config import config
 
 __all__ = ['Account']
-__metaclass__ = PoolMeta
 
 
 class Regexp(BinaryOperator):
@@ -22,7 +21,7 @@ class PostgresqlRegexp(BinaryOperator):
 
 
 class Account:
-    'Account'
+    __metaclass__ = PoolMeta
     __name__ = 'account.account'
 
     @staticmethod
