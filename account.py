@@ -2,10 +2,12 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import re
+
 from sql.operators import BinaryOperator, Like
+
+from trytond.backend import name as backend_name
 from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
-from trytond.config import config
 
 __all__ = ['Account']
 
@@ -20,17 +22,18 @@ class PostgresqlRegexp(BinaryOperator):
     _operator = '~'
 
 
+def regexp_function():
+    db_type = backend_name()
+    if db_type == 'postgresql':
+        return PostgresqlRegexp
+    elif db_type == 'mysql':
+        return Regexp
+    return None
+
+
 class Account:
     __metaclass__ = PoolMeta
     __name__ = 'account.account'
-
-    @staticmethod
-    def regexp_function(db_type):
-        if db_type == 'postgresql':
-            return PostgresqlRegexp
-        elif db_type == 'mysql':
-            return Regexp
-        return None
 
     @classmethod
     def search(cls, args, offset=0, limit=None, order=None, count=False,
@@ -51,8 +54,7 @@ class Account:
                 q = args[pos][2].replace('%', '')
                 if '.' in q:
                     q = q.partition('.')
-                    db_type = config.get('database', 'uri').split(':')[0]
-                    regexp = cls.regexp_function(db_type)
+                    regexp = regexp_function()
                     table = cls.__table__()
                     if regexp:
                         expression = '^%s0+%s$' % (q[0], q[2])
