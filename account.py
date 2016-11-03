@@ -3,13 +3,14 @@
 # the full copyright notices and license terms.
 import re
 
+from sql import Literal
 from sql.operators import BinaryOperator, Like
 
 from trytond.backend import name as backend_name
 from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
 
-__all__ = ['Account']
+__all__ = ['Account', 'GeneralLedgerAccount']
 
 
 class Regexp(BinaryOperator):
@@ -31,9 +32,9 @@ def regexp_function():
     return None
 
 
-class Account:
+class CodeWithDotMixin:
     __metaclass__ = PoolMeta
-    __name__ = 'account.account'
+    _dot_fields = ['code']
 
     @classmethod
     def search(cls, args, offset=0, limit=None, order=None, count=False,
@@ -56,16 +57,15 @@ class Account:
                     q = q.partition('.')
                     regexp = regexp_function()
                     table = cls.__table__()
+                    where = cls.get_dot_extra_where(table)
                     if regexp:
                         expression = '^%s0+%s$' % (q[0], q[2])
-                        ids = table.select(table.id, where=(
-                                (table.kind != 'view') &
+                        ids = table.select(table.id, where=(where &
                                 regexp(table.code, expression)))
                     else:
                         cursor = Transaction().connection.cursor()
                         cursor.execute(*table.select(table.id,
-                                table.code, where=(
-                                    (table.kind != 'view') &
+                                table.code, where=(where &
                                     Like(table.code, q[0] + '%' + q[2]))))
                         pattern = '^%s0+%s$' % (q[0], q[2])
                         ids = []
@@ -77,5 +77,21 @@ class Account:
                     else:
                         args[pos] = ('id', 'in', ids)
             pos += 1
-        return super(Account, cls).search(args, offset=offset, limit=limit,
-                order=order, count=count, query=query)
+        return super(CodeWithDotMixin, cls).search(args, offset=offset,
+            limit=limit, order=order, count=count, query=query)
+
+    @classmethod
+    def get_dot_extra_where(cls, table):
+        return Literal(True)
+
+
+class Account(CodeWithDotMixin):
+    __name__ = 'account.account'
+
+    @classmethod
+    def get_dot_extra_where(cls, table):
+        return (table.kind != 'view')
+
+
+class GeneralLedgerAccount(CodeWithDotMixin):
+    __name__ = 'account.general_ledger.account'

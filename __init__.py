@@ -7,4 +7,5 @@ from .account import *
 def register():
     Pool.register(
         Account,
+        GeneralLedgerAccount,
         module='account_search_with_dot', type_='model')
