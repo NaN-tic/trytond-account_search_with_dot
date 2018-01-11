@@ -94,8 +94,8 @@ class CodeWithDotMixin:
                 return domain
             else:
                 return [convert_domain(d) for d in domain]
-        return super(CodeWithDotMixin, cls).search_domain(convert_domain(domain),
-            active_test=active_test, tables=tables)
+        return super(CodeWithDotMixin, cls).search_domain(
+            convert_domain(domain), active_test=active_test, tables=tables)
 
     @classmethod
     def get_dot_extra_where(cls, table):
