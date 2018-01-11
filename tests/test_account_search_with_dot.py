@@ -33,12 +33,14 @@ class AccountSearchWithDotTestCase(ModuleTestCase):
             payable.code = '41000001'
             payable.save()
 
-            for Model in (Account, GeneralLedger):
-                for field in ('code', 'rec_name'):
-                    account, = Model.search([(field, 'ilike', '43.1')])
-                    self.assertEqual(account.code, u'43000001')
-                    account, = Model.search([(field, 'ilike', '41.1')])
-                    self.assertEqual(account.code, u'41000001')
+            for Model, field in [
+                    (Account, 'code'),
+                    (Account, 'rec_name'),
+                    (GeneralLedger, 'code')]:
+                account, = Model.search([(field, 'ilike', '43.1')])
+                self.assertEqual(account.code, u'43000001')
+                account, = Model.search([(field, 'ilike', '41.1')])
+                self.assertEqual(account.code, u'41000001')
 
 
 def suite():
