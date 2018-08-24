@@ -33,8 +33,7 @@ def regexp_function():
     return None
 
 
-class CodeWithDotMixin:
-    __metaclass__ = PoolMeta
+class CodeWithDotMixin(metaclass=PoolMeta):
     _dot_fields = ['code']
 
     @classmethod
@@ -79,7 +78,7 @@ class CodeWithDotMixin:
         def is_leaf(expression):
             return (isinstance(expression, (list, tuple))
                 and len(expression) > 2
-                and isinstance(expression[1], basestring)
+                and isinstance(expression[1], str)
                 and expression[1] in OPERATORS)  # TODO remove OPERATORS test
 
         def convert_domain(domain):

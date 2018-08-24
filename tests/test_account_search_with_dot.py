@@ -38,9 +38,9 @@ class AccountSearchWithDotTestCase(ModuleTestCase):
                     (Account, 'rec_name'),
                     (GeneralLedger, 'code')]:
                 account, = Model.search([(field, 'ilike', '43.1')])
-                self.assertEqual(account.code, u'43000001')
+                self.assertEqual(account.code, '43000001')
                 account, = Model.search([(field, 'ilike', '41.1')])
-                self.assertEqual(account.code, u'41000001')
+                self.assertEqual(account.code, '41000001')
 
 
 def suite():
