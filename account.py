@@ -3,13 +3,14 @@
 # the full copyright notices and license terms.
 import re
 
-from sql import Literal
+from sql import Literal, Null
 from sql.operators import BinaryOperator, Like
 
 from trytond.const import OPERATORS
 from trytond.backend import name as backend_name
 from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
+
 
 __all__ = ['Account', 'GeneralLedgerAccount']
 
@@ -106,7 +107,7 @@ class Account(CodeWithDotMixin):
 
     @classmethod
     def get_dot_extra_where(cls, table):
-        return (table.kind != 'view')
+        return (table.type != Null)
 
     @classmethod
     def search_rec_name(cls, name, clause):
