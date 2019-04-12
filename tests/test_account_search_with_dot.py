@@ -23,12 +23,12 @@ class AccountSearchWithDotTestCase(ModuleTestCase):
         with set_company(company):
             create_chart(company, tax=True)
             receivable, = Account.search([
-                    ('kind', '=', 'receivable'),
+                    ('type.receivable', '=', True),
                     ])
             receivable.code = '43000001'
             receivable.save()
             payable, = Account.search([
-                    ('kind', '=', 'payable'),
+                    ('type.payable', '=', True),
                     ])
             payable.code = '41000001'
             payable.save()

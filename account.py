@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 import re
 
-from sql import Literal, Null
+from sql import Literal
 from sql.operators import BinaryOperator, Like
 
 from trytond.const import OPERATORS
@@ -107,7 +107,7 @@ class Account(CodeWithDotMixin):
 
     @classmethod
     def get_dot_extra_where(cls, table):
-        return (table.type != Null)
+        return (table.type != None)
 
     @classmethod
     def search_rec_name(cls, name, clause):
