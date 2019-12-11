@@ -26,7 +26,7 @@ class PostgresqlRegexp(BinaryOperator):
 
 
 def regexp_function():
-    db_type = backend_name()
+    db_type = backend_name
     if db_type == 'postgresql':
         return PostgresqlRegexp
     elif db_type == 'mysql':
