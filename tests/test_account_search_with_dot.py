@@ -18,7 +18,7 @@ class AccountSearchWithDotTestCase(ModuleTestCase):
     def test0010search_with_dot(self):
         pool = Pool()
         Account = pool.get('account.account')
-        GeneralLedger = pool.get('account.general_ledger.account')
+
         company = create_company()
         with set_company(company):
             create_chart(company, tax=True)
@@ -36,7 +36,7 @@ class AccountSearchWithDotTestCase(ModuleTestCase):
             for Model, field in [
                     (Account, 'code'),
                     (Account, 'rec_name'),
-                    (GeneralLedger, 'code')]:
+                    ]:
                 account, = Model.search([(field, 'ilike', '43.1')])
                 self.assertEqual(account.code, '43000001')
                 account, = Model.search([(field, 'ilike', '41.1')])

@@ -12,9 +12,6 @@ from trytond.transaction import Transaction
 from trytond.pool import PoolMeta
 
 
-__all__ = ['Account', 'GeneralLedgerAccount']
-
-
 class Regexp(BinaryOperator):
     __slots__ = ()
     _operator = 'REGEXP'
@@ -94,8 +91,8 @@ class CodeWithDotMixin(metaclass=PoolMeta):
                 return domain
             else:
                 return [convert_domain(d) for d in domain]
-        return super(CodeWithDotMixin, cls).search_domain(
-            convert_domain(domain), active_test=active_test, tables=tables)
+        return super().search_domain(convert_domain(domain),
+            active_test=active_test, tables=tables)
 
     @classmethod
     def get_dot_extra_where(cls, table):
@@ -115,7 +112,7 @@ class Account(CodeWithDotMixin):
         Improves the search_rec_name allowing the use of a dot to fill the
         zeroes (like 43.27 to search account 43000027)
         '''
-        res = super(CodeWithDotMixin, cls).search_rec_name(name, clause)
+        res = super().search_rec_name(name, clause)
         if 'like' in clause[1]:
             new_clause = cls.get_clause(clause)
             if new_clause:
@@ -124,7 +121,3 @@ class Account(CodeWithDotMixin):
                 else:
                     return ['OR', [new_clause], res]
         return res
-
-
-class GeneralLedgerAccount(CodeWithDotMixin):
-    __name__ = 'account.general_ledger.account'
