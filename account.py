@@ -62,7 +62,7 @@ class CodeWithDotMixin(metaclass=PoolMeta):
     @classmethod
     def get_clause(cls, clause):
         clause = clause
-        q = clause[2].replace('%', '')
+        q = clause[2].replace('%', '').replace('*', '\*')
         if '.' in q:
             ids = cls.get_ids(q)
             if clause[1].startswith('not'):
