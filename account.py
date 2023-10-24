@@ -40,7 +40,10 @@ class CodeWithDotMixin(metaclass=PoolMeta):
         regexp = regexp_function()
         table = cls.__table__()
         where = cls.get_dot_extra_where(table)
-        if regexp:
+        # Check if the string provided contains symbols that could be
+        # interpreted as a regular expression
+        regexp_symbols = set('+?{}()[]|') & (set(q[0]) | set(q[2]))
+        if regexp and not regexp_symbols:
             expression = '^%s0+%s$' % (q[0], q[2])
             ids = table.select(table.id, where=(where &
                     regexp(table.code, expression)))
