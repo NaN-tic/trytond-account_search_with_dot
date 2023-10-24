@@ -41,6 +41,9 @@ class AccountSearchWithDotTestCase(CompanyTestMixin, ModuleTestCase):
                 self.assertEqual(account.code, '43000001')
                 account, = Model.search([(field, 'ilike', '41.1')])
                 self.assertEqual(account.code, '41000001')
+                # Ensure adding '+' sign does not make the regular expression
+                # crash
+                Model.search([(field, 'ilike', '%+43.1%')])
 
 
 del ModuleTestCase
