@@ -24,12 +24,14 @@ class AccountSearchWithDotTestCase(CompanyTestMixin, ModuleTestCase):
             create_chart(company, tax=True)
             receivable, = Account.search([
                     ('type.receivable', '=', True),
-                    ])
+                    ('closed', '=', False),
+                    ], limit=1)
             receivable.code = '43000001'
             receivable.save()
             payable, = Account.search([
                     ('type.payable', '=', True),
-                    ])
+                    ('closed', '=', False),
+                    ], limit=1)
             payable.code = '41000001'
             payable.save()
 
