@@ -71,7 +71,7 @@ class CodeWithDotMixin(metaclass=PoolMeta):
                 return ('id', 'in', ids)
 
     @classmethod
-    def search_domain(cls, domain, active_test=True, tables=None):
+    def search_domain(cls, domain, active_test=None, tables=None):
         '''
         Improves the search of accounts using a dot to fill the zeroes (like
         43.27 to search account 43000027)
